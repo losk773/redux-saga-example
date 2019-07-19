@@ -1,6 +1,6 @@
 import { createReducer } from 'shared';
-import { fetchGenresSuccess } from 'redux/actions';
+import { loadGenresSuccess } from 'redux/actions';
 
 export const genresReducer = createReducer([], {
-  [fetchGenresSuccess]: (state, { genres }) => ([...genres]),
+  [loadGenresSuccess]: (state, { genres }) => ([...genres]),
 });

@@ -1,6 +1,11 @@
 import { createReducer } from 'shared';
-import { fetchMoviesSuccess } from 'redux/actions';
+import uniqBy from 'lodash/uniqBy';
+import { loadMoviesSuccess, addFavoriteMovie } from 'redux/actions';
 
 export const moviesReducer = createReducer([], {
-  [fetchMoviesSuccess]: (state, { movies }) => ([...movies]),
+  [loadMoviesSuccess]: (state, { movies }) => ([...movies]),
+});
+
+export const favoriteMoviesReducer = createReducer([], {
+  [addFavoriteMovie]: (state, { movie }) => uniqBy([...state, movie], 'id'),
 });

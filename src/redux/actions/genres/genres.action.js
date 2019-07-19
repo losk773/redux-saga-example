@@ -1,3 +1,3 @@
 import { createAction } from 'shared';
 
-export const fetchGenresSuccess = createAction('FETCH_GENRES_SUCCESS', 'genres');
+export const loadGenresSuccess = createAction('LOAD_GENRES_SUCCESS', 'genres');
