@@ -9,9 +9,8 @@ export class HomeScene extends PureComponent {
   }
 
   componentDidMount () {
-    const { getMovies, getGenres } = this.props;
-    getGenres();
-    getMovies();
+    const { loadHomeData } = this.props;
+    loadHomeData();
   }
 
   handleSwitchGenres = (genresId, genresName) => {
@@ -23,7 +22,7 @@ export class HomeScene extends PureComponent {
   };
 
   render () {
-    const { moviesList, genresList } = this.props;
+    const { movies, genres } = this.props;
     const { title } = this.state;
 
     console.log('render');
@@ -33,8 +32,8 @@ export class HomeScene extends PureComponent {
         <h1>{title}</h1>
         <div className="genres-list">
           {
-            !isEmpty(genresList) ? (
-              genresList.map(item => (
+            !isEmpty(genres) ? (
+              genres.map(item => (
                 <Link key={item.id} to={item.name.toLowerCase()} onClick={() => this.handleSwitchGenres(item.id, item.name)}>{item.name}</Link>
               ))
             ) : null
@@ -43,8 +42,8 @@ export class HomeScene extends PureComponent {
         <hr/>
         <div className="movies-grid">
           {
-            isEmpty(moviesList) || (
-              moviesList.map(item => (
+            isEmpty(movies) || (
+              movies.map(item => (
                 <div key={item.id} className="movies-grid__item">
                   <div className="movie">
                     <div className="movie__thumb">
@@ -62,10 +61,8 @@ export class HomeScene extends PureComponent {
 }
 
 HomeScene.propTypes = {
-  getGenres: PropTypes.func,
-  getMovies: PropTypes.func,
+  loadHomeData: PropTypes.func,
   getMoviesByGenres: PropTypes.func,
-  moviesList: PropTypes.array,
-  genresList: PropTypes.array,
-  loading: PropTypes.bool,
+  movies: PropTypes.array,
+  genres: PropTypes.array,
 };

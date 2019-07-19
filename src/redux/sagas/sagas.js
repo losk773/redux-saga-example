@@ -1,26 +1,26 @@
-import { call, put, takeEvery, fork, all } from 'redux-saga/effects';
+import { call, put, fork, all, take, takeLatest } from 'redux-saga/effects';
 import {
+  loadHomeDataRequested,
   fetchMoviesSuccess,
-  fetchMoviesRequested,
   fetchGenresSuccess,
-  fetchGenresRequested,
   fetchMoviesByGenresRequested,
 } from 'redux/actions';
 import { Api } from 'api';
 
-function * fetchPopularMovies () {
+function * loadHomeData () {
   try {
-    const { data: { results } } = yield call(Api.getPopularMovies);
-    yield put(fetchMoviesSuccess(results));
-  } catch (error) {
-    console.log(error);
-  }
-}
+    const [moviesRes, genresRes] = yield all([
+      call(Api.getPopularMovies),
+      call(Api.getGenresList)
+    ]);
+    const { data: { results: movies } } = moviesRes;
+    const { data: { genres } } = genresRes;
 
-function * fetchAllGenres () {
-  try {
-    const { data: { genres } } = yield call(Api.getGenresList);
-    yield put(fetchGenresSuccess(genres));
+    yield put([
+      fetchMoviesSuccess(movies),
+      fetchGenresSuccess(genres)
+    ]);
+
   } catch (error) {
     console.log(error);
   }
@@ -35,23 +35,21 @@ function * fetchMoviesByGenres ({genres}) {
   }
 }
 
-function * watchFetchMovies () {
-  yield takeEvery(fetchMoviesRequested, fetchPopularMovies);
-}
-
-function * watchFetchGenres () {
-  yield takeEvery(fetchGenresRequested, fetchAllGenres);
+function * watchLoadHomeData () {
+  while (true) {
+    yield take(loadHomeDataRequested);
+    yield call(loadHomeData);
+  }
 }
 
 function * watchFetchMoviesByGenres () {
-  yield takeEvery(fetchMoviesByGenresRequested, fetchMoviesByGenres);
+  yield takeLatest(fetchMoviesByGenresRequested, fetchMoviesByGenres);
 }
 
 export function * rootSaga () {
 
   yield all([
-    fork(watchFetchMovies),
-    fork(watchFetchGenres),
+    fork(watchLoadHomeData),
     fork(watchFetchMoviesByGenres),
   ]);
 }

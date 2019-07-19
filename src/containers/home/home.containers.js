@@ -1,20 +1,19 @@
 import { HomeScene } from 'scenes';
 import { connect } from 'react-redux';
-import { fetchMoviesRequested, fetchGenresRequested, fetchMoviesByGenresRequested } from 'redux/actions';
+import { loadHomeDataRequested, fetchMoviesByGenresRequested } from 'redux/actions';
 
 const mapStateToProps = (state) => {
-  const { movies: { moviesList }, genres: { genresList } } = state;
+  const { movies, genres } = state;
 
   return {
-    moviesList,
-    genresList,
+    movies,
+    genres,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    getMovies: () => dispatch(fetchMoviesRequested(true)),
-    getGenres: () => dispatch(fetchGenresRequested(true)),
+    loadHomeData: () => dispatch(loadHomeDataRequested()),
     getMoviesByGenres: (genres) => dispatch(fetchMoviesByGenresRequested(genres)),
   };
 };
